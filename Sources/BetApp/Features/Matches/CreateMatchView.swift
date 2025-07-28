@@ -3,7 +3,7 @@ import SwiftUI
 struct CreateMatchView: View {
     @StateObject private var viewModel = CreateMatchViewModel()
     @EnvironmentObject var walletManager: WalletManager
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     
     var body: some View {
         NavigationStack {
@@ -395,7 +395,7 @@ class CreateMatchViewModel: ObservableObject {
 struct CustomStakeView: View {
     @Binding var stakeAmount: Int
     @State private var tempAmount = ""
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     
     var body: some View {
         NavigationStack {
@@ -439,7 +439,7 @@ struct CustomStakeView: View {
 
 struct RulesEditorView: View {
     @Binding var rules: String
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     @State private var tempRules = ""
     
     var body: some View {
@@ -477,7 +477,7 @@ struct RulesEditorView: View {
 
 struct FriendPickerView: View {
     @Binding var selectedFriends: [User]
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     @State private var friends: [User] = []
     @State private var searchText = ""
     

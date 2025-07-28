@@ -4,7 +4,7 @@ import CoreLocation
 struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
     @EnvironmentObject var authManager: AuthManager
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     
     var body: some View {
         NavigationStack {
@@ -261,7 +261,7 @@ struct RegionSelectionView: View {
 struct AccountSetupView: View {
     @ObservedObject var viewModel: OnboardingViewModel
     @EnvironmentObject var authManager: AuthManager
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     
     var body: some View {
         VStack(spacing: 20) {

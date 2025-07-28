@@ -4,7 +4,7 @@ import StoreKit
 struct PremiumView: View {
     @StateObject private var viewModel = PremiumViewModel()
     @EnvironmentObject var authManager: AuthManager
-    @Environment(\.dismiss) var dismiss
+    @Environment(\.dismiss) var dismiss: DismissAction
     @State private var selectedPlan: SubscriptionPlan = .monthly
     
     var body: some View {
