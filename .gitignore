@@ -92,6 +92,7 @@ iOSInjectionProject/
 # Environment variables
 .env
 .env.local
+supabase/.env.local
 
 # Supabase
 supabase/.branches

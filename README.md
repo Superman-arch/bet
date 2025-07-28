@@ -90,12 +90,7 @@ cd bet-app
 open BetApp.xcodeproj
 ```
 
-3. Configure environment variables in `Environment.swift`:
-```swift
-static let supabaseURL = URL(string: "YOUR_SUPABASE_URL")!
-static let supabaseAnonKey = "YOUR_SUPABASE_ANON_KEY"
-static let stripePublishableKey = "YOUR_STRIPE_PUBLISHABLE_KEY"
-```
+3. ~~Configure environment variables~~ **API keys are already configured** - no setup needed!
 
 4. Set up Supabase:
 ```bash

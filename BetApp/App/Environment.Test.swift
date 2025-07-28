@@ -3,12 +3,12 @@ import Foundation
 // Test environment configuration
 // Copy this to Environment.swift for testing
 enum TestEnvironment {
-    // Local Supabase
-    static let supabaseURL = URL(string: "http://localhost:54321")!
-    static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6ImFub24iLCJleHAiOjE5ODM4MTI5OTZ9.CRXP1A7WOeoJeXxjNni43kdQwgnWNReilDMblYTn_I0"
+    // Test Supabase (using the same test instance)
+    static let supabaseURL = URL(string: "https://kcuauyodflebjjhylpdh.supabase.co")!
+    static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjdWF1eW9kZmxlYmpqaHlscGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2NjU4NjAsImV4cCI6MjA2OTI0MTg2MH0.QaE7Pj8f8q9bcDielRNgLJj9Z1FxMJiU8E0kqsy8j7A"
     
     // Stripe Test Keys
-    static let stripePublishableKey = "pk_test_51234567890abcdefghijklmnopqrstuvwxyz"
+    static let stripePublishableKey = "pk_test_51Rpg1LL3mmYK3GIhMNYJEfmORQJoZyjEjrjFDuEp3KTNoHIZW7Ryc3yIEv2gG7R923I4j87Eo0CFSwS9YtBTCKqP009jRTC1oG"
     
     // Test Configuration
     static let isTestEnvironment = true
