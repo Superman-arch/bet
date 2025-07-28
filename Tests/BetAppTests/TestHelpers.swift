@@ -122,7 +122,7 @@ extension Task where Failure == Error {
         let semaphore = DispatchSemaphore(value: 0)
         var result: Result<Success, Error>?
         
-        Task {
+        Task { @MainActor in
             do {
                 let value = try await operation()
                 result = .success(value)
@@ -159,7 +159,7 @@ extension View {
     func testable() -> some View {
         self
             .environment(\.isTestEnvironment, true)
-            .animation(nil) // Disable animations in tests
+            .animation(nil, value: UUID()) // Disable animations in tests
     }
 }
 
