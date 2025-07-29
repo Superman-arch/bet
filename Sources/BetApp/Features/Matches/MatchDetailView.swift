@@ -1,4 +1,7 @@
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 struct MatchDetailView: View {
     let match: Match
@@ -49,9 +52,11 @@ struct MatchDetailView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Match Details")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Done") {
                         dismiss()
                     }
@@ -449,9 +454,11 @@ struct VoteSheet: View {
                 .padding(.bottom, 30)
             }
             .navigationTitle("Vote for Winner")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
@@ -465,7 +472,11 @@ struct DisputeSheet: View {
     let match: Match
     let viewModel: MatchDetailViewModel
     @Environment(\.dismiss) var dismiss
+    #if os(iOS)
     @State private var selectedImages: [UIImage] = []
+    #else
+    @State private var selectedImages: [Any] = []
+    #endif
     @State private var showingImagePicker = false
     @State private var disputeReason = ""
     
@@ -502,7 +513,8 @@ struct DisputeSheet: View {
                     if !selectedImages.isEmpty {
                         ScrollView(.horizontal, showsIndicators: false) {
                             HStack {
-                                ForEach(Array(selectedImages.enumerated()), id: \.offset) { index, image in
+                                #if os(iOS)
+                                ForEach(Array((selectedImages as? [UIImage] ?? []).enumerated()), id: \.offset) { index, image in
                                     Image(uiImage: image)
                                         .resizable()
                                         .scaledToFill()
@@ -510,6 +522,14 @@ struct DisputeSheet: View {
                                         .clipped()
                                         .cornerRadius(10)
                                 }
+                                #else
+                                ForEach(0..<selectedImages.count, id: \.self) { index in
+                                    Rectangle()
+                                        .fill(Color.gray)
+                                        .frame(width: 100, height: 100)
+                                        .cornerRadius(10)
+                                }
+                                #endif
                             }
                             .padding(.horizontal)
                         }
@@ -532,15 +552,17 @@ struct DisputeSheet: View {
                 }
             }
             .navigationTitle("Dispute Match")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Submit") {
                         Task {
                             await viewModel.submitDispute(images: selectedImages, reason: disputeReason)
@@ -551,9 +573,11 @@ struct DisputeSheet: View {
                     .disabled(selectedImages.isEmpty || viewModel.isProcessing)
                 }
             }
+            #if os(iOS)
             .sheet(isPresented: $showingImagePicker) {
                 ImagePicker(selectedImages: $selectedImages)
             }
+            #endif
         }
     }
 }
@@ -624,7 +648,7 @@ class MatchDetailViewModel: ObservableObject {
         }
     }
     
-    func submitDispute(images: [UIImage], reason: String) async {
+    func submitDispute(images: [Any], reason: String) async {
         // Upload images and submit dispute
         isProcessing = true
         defer { isProcessing = false }
@@ -652,6 +676,7 @@ class MatchDetailViewModel: ObservableObject {
     }
 }
 
+#if os(iOS)
 struct ImagePicker: UIViewControllerRepresentable {
     @Binding var selectedImages: [UIImage]
     
@@ -683,3 +708,4 @@ struct ImagePicker: UIViewControllerRepresentable {
         }
     }
 }
+#endif

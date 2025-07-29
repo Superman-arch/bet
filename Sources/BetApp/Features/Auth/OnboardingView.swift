@@ -4,7 +4,7 @@ import CoreLocation
 struct OnboardingView: View {
     @StateObject private var viewModel = OnboardingViewModel()
     @EnvironmentObject var authManager: AuthManager
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
@@ -22,7 +22,7 @@ struct OnboardingView: View {
                     AccountSetupView(viewModel: viewModel)
                         .tag(3)
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .platformPageTabViewStyle()
                 .animation(.easeInOut, value: viewModel.currentPage)
                 
                 HStack {
@@ -52,7 +52,7 @@ struct WelcomeView: View {
             Image(systemName: "dollarsign.circle.fill")
                 .font(.system(size: 100))
                 .foregroundColor(.accentColor)
-                .symbolEffect(.bounce, value: true)
+                .modifier(BounceEffect(value: 1))
             
             VStack(spacing: 10) {
                 Text("Welcome to Bet")
@@ -138,7 +138,11 @@ struct AgeVerificationView: View {
             }
             
             DatePicker("Birthday", selection: $selectedDate, displayedComponents: .date)
+                #if os(iOS)
                 .datePickerStyle(WheelDatePickerStyle())
+                #else
+                .datePickerStyle(DefaultDatePickerStyle())
+                #endif
                 .labelsHidden()
                 .padding(.horizontal, 40)
             
@@ -261,7 +265,7 @@ struct RegionSelectionView: View {
 struct AccountSetupView: View {
     @ObservedObject var viewModel: OnboardingViewModel
     @EnvironmentObject var authManager: AuthManager
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         VStack(spacing: 20) {
@@ -368,9 +372,9 @@ class OnboardingViewModel: ObservableObject {
                 age: age
             )
             
-            UserDefaults.standard.set(true, forKey: Environment.UserDefaultsKeys.hasCompletedOnboarding)
-            UserDefaults.standard.set(true, forKey: Environment.UserDefaultsKeys.ageVerified)
-            UserDefaults.standard.set(selectedRegion, forKey: Environment.UserDefaultsKeys.userRegion)
+            UserDefaults.standard.set(true, forKey: AppEnvironment.UserDefaultsKeys.hasCompletedOnboarding)
+            UserDefaults.standard.set(true, forKey: AppEnvironment.UserDefaultsKeys.ageVerified)
+            UserDefaults.standard.set(selectedRegion, forKey: AppEnvironment.UserDefaultsKeys.userRegion)
         } catch {
             errorMessage = error.localizedDescription
             showError = true

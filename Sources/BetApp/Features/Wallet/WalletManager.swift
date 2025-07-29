@@ -56,7 +56,7 @@ class WalletManager: ObservableObject {
             
             // Track analytics
             AnalyticsManager.shared.track(
-                event: Environment.AnalyticsEvents.tokensPurchased,
+                event: AppEnvironment.AnalyticsEvents.tokensPurchased,
                 properties: [
                     "amount": amount,
                     "tokens": tokenAmount,
@@ -100,7 +100,7 @@ class WalletManager: ObservableObject {
             
             // Track analytics
             AnalyticsManager.shared.track(
-                event: Environment.AnalyticsEvents.tokensWithdrawn,
+                event: AppEnvironment.AnalyticsEvents.tokensWithdrawn,
                 properties: ["amount": amount]
             )
         }

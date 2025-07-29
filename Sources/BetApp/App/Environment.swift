@@ -1,6 +1,6 @@
 import Foundation
 
-enum Environment {
+enum AppEnvironment {
     static let supabaseURL = URL(string: "https://kcuauyodflebjjhylpdh.supabase.co")!
     static let supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtjdWF1eW9kZmxlYmpqaHlscGRoIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM2NjU4NjAsImV4cCI6MjA2OTI0MTg2MH0.QaE7Pj8f8q9bcDielRNgLJj9Z1FxMJiU8E0kqsy8j7A"
     static let stripePublishableKey = "pk_test_51Rpg1LL3mmYK3GIhMNYJEfmORQJoZyjEjrjFDuEp3KTNoHIZW7Ryc3yIEv2gG7R923I4j87Eo0CFSwS9YtBTCKqP009jRTC1oG"

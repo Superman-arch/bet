@@ -3,7 +3,7 @@ import SwiftUI
 struct CreateMatchView: View {
     @StateObject private var viewModel = CreateMatchViewModel()
     @EnvironmentObject var walletManager: WalletManager
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
@@ -148,15 +148,19 @@ struct CreateMatchView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Create Match")
+            #if os(iOS)
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Create") {
                         Task {
                             await viewModel.createMatch(walletManager: walletManager)
@@ -365,7 +369,7 @@ class CreateMatchViewModel: ObservableObject {
             try await walletManager.deductStake(stakeAmount, for: match.id)
             
             // Send invites to friends
-            for friend in invitedFriends {
+            for _ in invitedFriends {
                 // Send push notification or in-app invite
             }
             
@@ -376,7 +380,7 @@ class CreateMatchViewModel: ObservableObject {
             
             // Track analytics
             AnalyticsManager.shared.track(
-                event: Environment.AnalyticsEvents.matchCreated,
+                event: AppEnvironment.AnalyticsEvents.matchCreated,
                 properties: [
                     "activity": activity.name,
                     "stake": stakeAmount,
@@ -395,7 +399,7 @@ class CreateMatchViewModel: ObservableObject {
 struct CustomStakeView: View {
     @Binding var stakeAmount: Int
     @State private var tempAmount = ""
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     
     var body: some View {
         NavigationStack {
@@ -425,9 +429,11 @@ struct CustomStakeView: View {
                 .padding(.horizontal, 40)
                 .padding(.bottom, 30)
             }
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
@@ -439,7 +445,7 @@ struct CustomStakeView: View {
 
 struct RulesEditorView: View {
     @Binding var rules: String
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     @State private var tempRules = ""
     
     var body: some View {
@@ -452,15 +458,17 @@ struct RulesEditorView: View {
                     .padding()
             }
             .navigationTitle("Edit Rules")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Save") {
                         rules = tempRules
                         dismiss()
@@ -477,7 +485,7 @@ struct RulesEditorView: View {
 
 struct FriendPickerView: View {
     @Binding var selectedFriends: [User]
-    @Environment(\.dismiss) var dismiss: DismissAction
+    @Environment(\.dismiss) var dismiss
     @State private var friends: [User] = []
     @State private var searchText = ""
     
@@ -518,9 +526,11 @@ struct FriendPickerView: View {
             }
             .searchable(text: $searchText, prompt: "Search friends")
             .navigationTitle("Invite Friends")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Done") {
                         dismiss()
                     }

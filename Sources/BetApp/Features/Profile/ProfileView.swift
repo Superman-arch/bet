@@ -1,4 +1,7 @@
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 struct ProfileView: View {
     @EnvironmentObject var authManager: AuthManager
@@ -86,7 +89,7 @@ struct ProfileView: View {
                             showingSettings = true
                         }
                     }
-                    .background(Color(UIColor.secondarySystemBackground))
+                    .background(Color.gray.opacity(0.1))
                     .cornerRadius(15)
                     .padding(.horizontal)
                     
@@ -112,7 +115,9 @@ struct ProfileView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Profile")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .sheet(isPresented: $showingSettings) {
                 SettingsView()
             }
@@ -213,7 +218,7 @@ struct ProfileHeaderView: View {
             }
         }
         .padding()
-        .background(Color(UIColor.secondarySystemBackground))
+        .background(Color.gray.opacity(0.1))
         .cornerRadius(20)
         .padding(.horizontal)
     }
@@ -310,7 +315,7 @@ struct StatsOverviewView: View {
                 )
             }
             .padding()
-            .background(Color(UIColor.secondarySystemBackground))
+            .background(Color.gray.opacity(0.1))
             .cornerRadius(15)
         }
         .padding(.horizontal)
@@ -387,7 +392,11 @@ struct EditProfileView: View {
     @State private var username = ""
     @State private var phone = ""
     @State private var showingImagePicker = false
+    #if os(iOS)
     @State private var selectedImage: UIImage?
+    #else
+    @State private var selectedImage: Any?
+    #endif
     
     var body: some View {
         NavigationStack {
@@ -404,7 +413,8 @@ struct EditProfileView: View {
                                     .fill(Color.gray.opacity(0.3))
                                     .frame(width: 100, height: 100)
                                 
-                                if let image = selectedImage {
+                                #if os(iOS)
+                                if let image = selectedImage as? UIImage {
                                     Image(uiImage: image)
                                         .resizable()
                                         .scaledToFill()
@@ -416,8 +426,16 @@ struct EditProfileView: View {
                                         Text("Add Photo")
                                             .font(.caption)
                                     }
-                                    .foregroundColor(.secondary)
                                 }
+                                #else
+                                VStack {
+                                    Image(systemName: "camera.fill")
+                                    Text("Add Photo")
+                                        .font(.caption)
+                                }
+                                #endif
+                                }
+                                .foregroundColor(.secondary)
                             }
                         }
                         
@@ -426,10 +444,12 @@ struct EditProfileView: View {
                     .listRowBackground(Color.clear)
                 }
                 
-                Section("Profile Information") {
+                Section(header: Text("Profile Information")) {
                     TextField("Username", text: $username)
                     TextField("Phone Number", text: $phone)
+                        #if os(iOS)
                         .keyboardType(.phonePad)
+                        #endif
                 }
                 
                 Section("Account Information") {
@@ -456,15 +476,17 @@ struct EditProfileView: View {
                 }
             }
             .navigationTitle("Edit Profile")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Save") {
                         // Save profile changes
                         dismiss()
@@ -472,16 +494,17 @@ struct EditProfileView: View {
                     .fontWeight(.semibold)
                 }
             }
+            #if os(iOS)
             .sheet(isPresented: $showingImagePicker) {
                 ImagePicker(selectedImages: .constant([]))
             }
+            #endif
             .onAppear {
                 username = authManager.currentUser?.username ?? ""
                 phone = authManager.currentUser?.phone ?? ""
             }
         }
     }
-}
 
 struct UserStats {
     let totalMatches: Int

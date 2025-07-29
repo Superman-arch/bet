@@ -16,13 +16,20 @@ struct ContentView: View {
         .onAppear {
             checkOnboardingStatus()
         }
+        #if os(iOS)
         .fullScreenCover(isPresented: $showingOnboarding) {
             OnboardingView()
         }
+        #else
+        .sheet(isPresented: $showingOnboarding) {
+            OnboardingView()
+                .frame(minWidth: 800, minHeight: 600)
+        }
+        #endif
     }
     
     private func checkOnboardingStatus() {
-        let hasCompletedOnboarding = UserDefaults.standard.bool(forKey: Environment.UserDefaultsKeys.hasCompletedOnboarding)
+        let hasCompletedOnboarding = UserDefaults.standard.bool(forKey: AppEnvironment.UserDefaultsKeys.hasCompletedOnboarding)
         if !hasCompletedOnboarding && !authManager.isAuthenticated {
             showingOnboarding = true
         }

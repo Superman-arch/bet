@@ -1,6 +1,9 @@
 import Foundation
 import UserNotifications
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 class NotificationManager: ObservableObject {
     @Published var hasPermission = false
@@ -36,9 +39,11 @@ class NotificationManager: ObservableObject {
     }
     
     private func registerForPushNotifications() async {
+        #if os(iOS)
         await MainActor.run {
             UIApplication.shared.registerForRemoteNotifications()
         }
+        #endif
     }
     
     // MARK: - Notification Types
@@ -79,7 +84,11 @@ class NotificationManager: ObservableObject {
         let content = UNMutableNotificationContent()
         content.title = "You Won! 🎉"
         content.body = "Congratulations! \(amount) tokens have been added to your wallet."
-        content.sound = UNSoundName("win.mp3")
+        #if os(iOS)
+        content.sound = UNNotificationSound(named: UNNotificationSoundName("win.mp3"))
+        #else
+        content.sound = UNNotificationSound.default
+        #endif
         content.categoryIdentifier = "PAYOUT"
         
         let request = UNNotificationRequest(
@@ -172,9 +181,11 @@ class NotificationManager: ObservableObject {
     // MARK: - Badge Management
     
     func updateBadgeCount(_ count: Int) {
+        #if os(iOS)
         Task { @MainActor in
             UIApplication.shared.applicationIconBadgeNumber = count
         }
+        #endif
     }
     
     func clearBadge() {
@@ -220,15 +231,17 @@ struct NotificationsView: View {
             }
             .listStyle(PlainListStyle())
             .navigationTitle("Notifications")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Close") {
                         dismiss()
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Clear All") {
                         viewModel.clearAll()
                     }
@@ -367,7 +380,7 @@ class NotificationsViewModel: ObservableObject {
         // Handle action based on type
         switch notification.type {
         case .matchInvite, .voteReminder:
-            if let matchId = notification.actionData?["matchId"] as? String {
+            if notification.actionData?["matchId"] != nil {
                 // Navigate to match
             }
         case .friendRequest:

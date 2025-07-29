@@ -1,10 +1,31 @@
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
+
+enum BetKeyboardType {
+    case `default`
+    case numberPad
+    case emailAddress
+    case phonePad
+}
 
 struct CustomTextField: View {
     let placeholder: String
     @Binding var text: String
     var icon: String? = nil
-    var keyboardType: UIKeyboardType = .default
+    var keyboardType: BetKeyboardType = .default
+    
+    #if os(iOS)
+    private var keyboardTypeForPlatform: UIKeyboardType {
+        switch keyboardType {
+        case .default: return .default
+        case .numberPad: return .numberPad
+        case .emailAddress: return .emailAddress
+        case .phonePad: return .phonePad
+        }
+    }
+    #endif
     
     var body: some View {
         HStack {
@@ -15,8 +36,10 @@ struct CustomTextField: View {
             }
             
             TextField(placeholder, text: $text)
-                .keyboardType(keyboardType)
+                #if os(iOS)
+                .keyboardType(keyboardTypeForPlatform)
                 .textInputAutocapitalization(.never)
+                #endif
                 .autocorrectionDisabled()
         }
         .padding()
@@ -43,7 +66,9 @@ struct CustomSecureField: View {
                 SecureField(placeholder, text: $text)
             } else {
                 TextField(placeholder, text: $text)
+                    #if os(iOS)
                     .textInputAutocapitalization(.never)
+                    #endif
                     .autocorrectionDisabled()
             }
             

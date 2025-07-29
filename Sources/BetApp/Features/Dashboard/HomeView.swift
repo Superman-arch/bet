@@ -43,13 +43,15 @@ struct HomeView: View {
                     }
                     
                     // Promotional Banner
-                    if !authManager.currentUser?.isPremium ?? true {
+                    if !(authManager.currentUser?.isPremium ?? false) {
                         PremiumPromoBanner()
                     }
                 }
                 .padding(.vertical)
             }
+            #if os(iOS)
             .navigationBarHidden(true)
+            #endif
             .refreshable {
                 await viewModel.refresh()
                 await walletManager.fetchBalance()
@@ -183,7 +185,7 @@ struct StatCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
     }
 }
@@ -290,7 +292,7 @@ struct CompactMatchCard: View {
             .frame(width: 180)
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color(UIColor.secondarySystemBackground))
+                    .fill(Color.gray.opacity(0.1))
             )
         }
         .buttonStyle(PlainButtonStyle())

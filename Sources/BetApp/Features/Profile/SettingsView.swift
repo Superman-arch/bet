@@ -109,9 +109,11 @@ struct SettingsView: View {
                 }
             }
             .navigationTitle("Settings")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Done") {
                         dismiss()
                     }
@@ -125,12 +127,14 @@ struct SettingsView: View {
             } message: {
                 Text("This action cannot be undone. All your data will be permanently deleted.")
             }
+            #if os(iOS)
             .sheet(isPresented: $showingPrivacy) {
                 SafariView(url: URL(string: "https://betapp.com/privacy")!)
             }
             .sheet(isPresented: $showingTerms) {
                 SafariView(url: URL(string: "https://betapp.com/terms")!)
             }
+            #endif
         }
     }
 }
@@ -161,7 +165,9 @@ struct NotificationPreferencesView: View {
             }
         }
         .navigationTitle("Notifications")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
@@ -203,7 +209,9 @@ struct BlockedUsersView: View {
             }
         }
         .navigationTitle("Blocked Users")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
@@ -261,7 +269,9 @@ struct DataPrivacyView: View {
             }
         }
         .navigationTitle("Data & Privacy")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
@@ -313,7 +323,9 @@ struct MatchDefaultsView: View {
             }
         }
         .navigationTitle("Match Defaults")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
@@ -362,7 +374,9 @@ struct ExportDataView: View {
         }
         .padding(.top, 60)
         .navigationTitle("Export Data")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
     
     private func startExport() {
@@ -393,7 +407,9 @@ struct LicensesView: View {
             LicenseRow(name: "Stripe iOS SDK", license: "MIT License")
         }
         .navigationTitle("Licenses")
+        #if os(iOS)
         .navigationBarTitleDisplayMode(.inline)
+        #endif
     }
 }
 
@@ -423,6 +439,9 @@ struct DataUsageStats {
     }
 }
 
+#if os(iOS)
+import SafariServices
+
 struct SafariView: UIViewControllerRepresentable {
     let url: URL
     
@@ -432,8 +451,7 @@ struct SafariView: UIViewControllerRepresentable {
     
     func updateUIViewController(_ uiViewController: SFSafariViewController, context: Context) {}
 }
-
-import SafariServices
+#endif
 
 struct ContentUnavailableView: View {
     let title: String

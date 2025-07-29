@@ -336,9 +336,11 @@ struct KYCVerificationView: View {
                 }
             }
             .navigationTitle("KYC Verification")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Cancel") {
                         dismiss()
                     }

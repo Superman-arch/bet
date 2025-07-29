@@ -37,7 +37,7 @@ class AuthManager: ObservableObject {
             keychain.saveAuthToken("dummy_token") // Replace with actual token
             
             // Track analytics
-            AnalyticsManager.shared.track(event: Environment.AnalyticsEvents.userSignedUp)
+            AnalyticsManager.shared.track(event: AppEnvironment.AnalyticsEvents.userSignedUp)
         } catch {
             authError = error.localizedDescription
             throw error
@@ -57,7 +57,7 @@ class AuthManager: ObservableObject {
             keychain.saveAuthToken("dummy_token") // Replace with actual token
             
             // Track analytics
-            AnalyticsManager.shared.track(event: Environment.AnalyticsEvents.userSignedIn)
+            AnalyticsManager.shared.track(event: AppEnvironment.AnalyticsEvents.userSignedIn)
         } catch {
             authError = error.localizedDescription
             throw error
@@ -101,7 +101,7 @@ class AuthManager: ObservableObject {
 }
 
 class KeychainManager {
-    private let service = Environment.keychainServiceIdentifier
+    private let service = AppEnvironment.keychainServiceIdentifier
     
     func saveAuthToken(_ token: String) {
         let data = token.data(using: .utf8)!

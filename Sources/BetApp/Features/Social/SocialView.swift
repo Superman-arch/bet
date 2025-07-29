@@ -1,4 +1,7 @@
 import SwiftUI
+#if os(iOS)
+import UIKit
+#endif
 
 struct SocialView: View {
     @StateObject private var viewModel = SocialViewModel()
@@ -36,13 +39,15 @@ struct SocialView: View {
                     LeaderboardView()
                         .tag(2)
                 }
-                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .platformPageTabViewStyle()
             }
             .navigationTitle("Social")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .searchable(text: $searchText, prompt: "Search friends")
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button {
                         showingAddFriend = true
                     } label: {
@@ -182,7 +187,7 @@ struct FriendRow: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
         .sheet(isPresented: $showingProfile) {
             FriendProfileView(friend: friend)
@@ -300,7 +305,7 @@ struct PendingRequestRow: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
     }
 }
@@ -341,7 +346,7 @@ struct SentRequestRow: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
     }
 }
@@ -464,7 +469,7 @@ struct PodiumView: View {
                     Color.orange
                 )
                 .frame(height: height)
-                .cornerRadius(10, corners: [.topLeft, .topRight])
+                .cornerRadius(10, corners: [])
         }
     }
 }
@@ -512,7 +517,7 @@ struct LeaderboardRow: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
     }
 }
@@ -570,15 +575,17 @@ struct AddFriendView: View {
                 Spacer()
             }
             .navigationTitle("Add Friend")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarLeading) {
+                ToolbarItem(placement: .leadingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
                 }
                 
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Search") {
                         Task {
                             await search()
@@ -741,9 +748,11 @@ struct FriendProfileView: View {
                 }
             }
             .navigationTitle("Profile")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Done") {
                         dismiss()
                     }
@@ -776,7 +785,7 @@ struct StatBox: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 15)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
     }
 }
@@ -893,7 +902,7 @@ class SocialViewModel: ObservableObject {
     func declineRequest(_ request: Friendship) async {
         // Decline friend request
         await loadRequests()
-        HapticManager.impact(.light)
+        HapticManager.selection()
     }
 }
 
@@ -928,6 +937,7 @@ extension DateFormatter {
     }()
 }
 
+#if os(iOS)
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         clipShape(RoundedCorner(radius: radius, corners: corners))
@@ -947,3 +957,10 @@ struct RoundedCorner: Shape {
         return Path(path.cgPath)
     }
 }
+#else
+extension View {
+    func cornerRadius(_ radius: CGFloat, corners: Any) -> some View {
+        self.cornerRadius(radius)
+    }
+}
+#endif

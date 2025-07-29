@@ -71,9 +71,11 @@ struct MatchesView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Matches")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button {
                         showingCreateMatch = true
                     } label: {
@@ -187,7 +189,7 @@ struct MatchCard: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color(UIColor.secondarySystemBackground))
+                    .fill(Color.gray.opacity(0.1))
             )
         }
         .buttonStyle(PlainButtonStyle())

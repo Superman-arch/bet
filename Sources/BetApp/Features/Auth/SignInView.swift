@@ -15,7 +15,7 @@ struct SignInView: View {
                         Image(systemName: "dollarsign.circle.fill")
                             .font(.system(size: 80))
                             .foregroundColor(.accentColor)
-                            .symbolEffect(.bounce, value: viewModel.loginAttempts)
+                            .modifier(BounceEffect(value: viewModel.loginAttempts))
                         
                         Text("Welcome Back")
                             .font(.largeTitle)
@@ -229,9 +229,11 @@ struct ForgotPasswordView: View {
                 .padding(.horizontal, 40)
                 .padding(.bottom, 30)
             }
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Cancel") {
                         dismiss()
                     }

@@ -62,7 +62,9 @@ struct WalletView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Wallet")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.large)
+            #endif
             .refreshable {
                 await walletManager.fetchBalance()
                 await walletManager.fetchTransactions()
@@ -131,7 +133,7 @@ struct BalanceCard: View {
         .padding()
         .background(
             RoundedRectangle(cornerRadius: 20)
-                .fill(Color(UIColor.secondarySystemBackground))
+                .fill(Color.gray.opacity(0.1))
         )
         .alert("Balance Information", isPresented: $showingInfo) {
             Button("OK") { }
@@ -225,7 +227,7 @@ struct DepositView: View {
                                 Text("Total")
                                     .font(.headline)
                                 Spacer()
-                                Text("$\(selected.price, specifier: "%.2f")")
+                                Text(String(format: "$%.2f", selected.price))
                                     .font(.title2)
                                     .fontWeight(.bold)
                             }
@@ -246,7 +248,7 @@ struct DepositView: View {
                             .disabled(isProcessing)
                         }
                         .padding()
-                        .background(Color(UIColor.secondarySystemBackground))
+                        .background(Color.gray.opacity(0.1))
                         .cornerRadius(15)
                         .padding(.horizontal)
                     }
@@ -254,9 +256,11 @@ struct DepositView: View {
                 .padding(.vertical)
             }
             .navigationTitle("Add Tokens")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
@@ -337,7 +341,7 @@ struct TokenPackageCard: View {
             .padding()
             .background(
                 RoundedRectangle(cornerRadius: 15)
-                    .fill(Color(UIColor.secondarySystemBackground))
+                    .fill(Color.gray.opacity(0.1))
                     .overlay(
                         RoundedRectangle(cornerRadius: 15)
                             .stroke(isSelected ? Color.accentColor : Color.clear, lineWidth: 2)
@@ -427,9 +431,11 @@ struct WithdrawView: View {
                 .padding(.bottom, 30)
             }
             .navigationTitle("Withdraw Tokens")
+            #if os(iOS)
             .navigationBarTitleDisplayMode(.inline)
+            #endif
             .toolbar {
-                ToolbarItem(placement: .navigationBarTrailing) {
+                ToolbarItem(placement: .trailingBar) {
                     Button("Cancel") {
                         dismiss()
                     }
